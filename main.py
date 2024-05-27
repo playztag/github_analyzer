@@ -1,11 +1,10 @@
-# main.py
 import os
 from github import Github
 from dotenv import load_dotenv
 from termcolor import cprint
-from core.summarize import summarize_directory
-from utils.log_utils import log_conversation
 from utils.menu import navigation_menu
+from utils.log_utils import log_conversation
+from core.summarize import summarize_directory
 import openai
 import traceback
 

@@ -14,6 +14,7 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
     spinner = Halo(text='Waiting for API response...', spinner='dots')
     spinner.start()
     
+    # Include previous interactions and context in the prompt
     messages = [{"role": "system", "content": system_prompt}]
     messages += previous_interactions
     messages.append({"role": "user", "content": user_prompt})
