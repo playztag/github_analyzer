@@ -6,7 +6,7 @@ from utils.interaction_utils import process_user_prompt
 from utils.file_utils import analyze_file_choice
 from utils.utils import handle_directory_choice, capture_selected_directories, display_contents, mark_item, display_marked_items
 from core.github_utils import estimate_code_size
-from core.summarize import summarize_folders  # Import summarize_folders
+from core.summarize import summarize_folders
 import traceback
 
 def execute_choice(choice, repo, branch_name, directory_path, selected_directories, conversation_log, previous_interactions):
@@ -58,7 +58,7 @@ def navigation_menu(repo, conversation_log):
             display_marked_items()
             summary = summarize_folders(repo, branch_name, directory_path, previous_interactions)
             cprint(f"Directory Summary: {summary}", 'cyan')
-            display_contents(contents)
+            display_contents(contents, repo, branch_name)
             display_navigation_menu()
             choice = input("Enter your choice (number to navigate, letter for menu): ")
             
@@ -67,3 +67,4 @@ def navigation_menu(repo, conversation_log):
         except Exception as e:
             cprint(f"Error in navigation_menu: {e}", 'red')
             traceback.print_exc()
+            break  # Exit the loop on error

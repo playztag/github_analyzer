@@ -22,8 +22,8 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
     total_tokens = sum(count_tokens(message["content"]) for message in messages)
     
     # Print the first 100 characters of the prompt for debugging
-    print("Prompt sent to LLM (first 100 characters):")
-    print(messages[-1]['content'][:100])
+    print("Prompt sent to LLM (first 300 characters):")
+    print(messages[-1]['content'][:300])
 
     try:
         response = protected_openai_chat_completion(messages)

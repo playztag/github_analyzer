@@ -5,5 +5,9 @@ I am analyzing an open-source GitHub repository named '{repo_name}'. The reposit
 
 {readme_text}
 
+Additionally, the repository structure includes the following:
+
+{structure_summary}
+
 Please provide a concise summary of the repository (keep it under 200 words), focusing on the key aspects of the source code and its structure. We are interested in understanding where the core functionality resides for learning and training purposes.
 """

@@ -5,9 +5,26 @@ import traceback
 
 response_cache = {}  # Ensure the response_cache is defined
 
-def summarize_readme_and_structure(readme_text, repo_name, branches):
+def summarize_readme_and_structure(readme_text, repo, branches):
     cprint("Starting to summarize the README file and repository structure...", 'cyan')
-    user_prompt = USER_PROMPT_SUMMARY.format(readme_text=readme_text, repo_name=repo_name, branches=branches)
+    
+    # Fetch the root directory contents
+    try:
+        root_contents = repo.get_contents("", ref=repo.default_branch)
+        directories = [content.path for content in root_contents if content.type == "dir"]
+        files = [content.path for content in root_contents if content.type == "file"]
+        
+        structure_summary = f"Directories: {directories}\nFiles: {files}\n"
+    except Exception as e:
+        structure_summary = f"Error fetching directory structure: {e}"
+        traceback.print_exc()
+    
+    user_prompt = USER_PROMPT_SUMMARY.format(
+        readme_text=readme_text, 
+        repo_name=repo.full_name, 
+        branches=branches,
+        structure_summary=structure_summary
+    )
 
     try:
         summary, _, tokens_used = generate_ai_response(SYSTEM_PROMPT, user_prompt)

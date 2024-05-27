@@ -35,17 +35,15 @@ def main():
         # Fetch branches
         branches = [branch.name for branch in repo.get_branches()]
         
-        # Summarize README file
+        # Summarize README file and repository structure
         readme = repo.get_readme()
         readme_text = readme.decoded_content.decode()
-        
-        # Summarize README and repository structure
-        readme_summary, _, tokens_used = summarize_readme_and_structure(readme_text, repo_name, branches)
+        summary, _, tokens_used = summarize_readme_and_structure(readme_text, repo, branches)
         cprint("Repository Purpose Summary:\n", 'yellow')
-        cprint(readme_summary, 'yellow')
+        cprint(summary, 'yellow')
         
         # Log conversation
-        log_conversation("Initial repository analysis", readme_summary, conversation_log)
+        log_conversation("Initial repository analysis", summary, conversation_log)
         
         # Start interactive navigation menu
         navigation_menu(repo, conversation_log)

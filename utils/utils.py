@@ -40,7 +40,7 @@ def capture_selected_directories(selected_directories):
     for dir in selected_directories:
         cprint(f"- {dir}", 'cyan')
 
-def display_contents(contents):
+def display_contents(contents, repo, branch_name):
     directories = [content for content in contents if content.type == "dir"]
     files = [content for content in contents if content.type == "file"]
     
