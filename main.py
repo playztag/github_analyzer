@@ -18,6 +18,9 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 github_token = os.getenv('GITHUB_TOKEN')
 g = Github(github_token)
 
+def get_default_branch(repo):
+    return repo.default_branch
+
 def main():
     repo_url = "https://github.com/betaflight/betaflight"
     conversation_log = "conversation_log.txt"
