@@ -124,3 +124,14 @@ def navigation_menu(repo, conversation_log, root_contents):
             cprint(f"Error in navigation_menu: {e}", 'red')
             traceback.print_exc()
             break  # Exit the loop on error
+
+def display_navigation_menu():
+    """Display navigation menu options."""
+    cprint("\nNavigation Menu:", 'cyan')
+    cprint("a. Mark current directory for capture", 'cyan')
+    cprint("b. Capture all selected directories", 'cyan')
+    cprint("c. Exit", 'cyan')
+    cprint("d. Enter a prompt for AI assistance", 'cyan')
+    cprint("e. Analyze current directory with AI", 'cyan')
+    cprint("f. Change branch", 'cyan')
+    cprint("u. Navigate up to previous directory", 'cyan')
