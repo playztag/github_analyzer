@@ -1,7 +1,7 @@
-# test_menu.py
 import unittest
 from unittest.mock import patch, MagicMock
 from utils.menu import execute_choice
+import traceback
 
 class TestMenuModule(unittest.TestCase):
 

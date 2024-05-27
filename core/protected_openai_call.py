@@ -3,7 +3,7 @@ import traceback
 
 def protected_openai_chat_completion(messages):
     try:
-        response = openai.chat.completions.create(
+        response = openai.ChatCompletion.create(
             model="gpt-4o",
             messages=messages,
             temperature=0.7
