@@ -41,6 +41,9 @@ def capture_selected_directories(selected_directories):
         cprint(f"- {dir}", 'cyan')
 
 def display_contents(contents, repo, branch_name):
+    if not isinstance(contents, list):
+        contents = [contents]  # Ensure contents is a list
+
     directories = [content for content in contents if content.type == "dir"]
     files = [content for content in contents if content.type == "file"]
     
@@ -52,3 +55,5 @@ def display_contents(contents, repo, branch_name):
     for i, content in enumerate(files):
         lines_of_code = estimate_code_size(repo, content.path, branch_name)
         cprint(f"{i + 1 + len(directories)}. {content.path} - Lines of Code: {lines_of_code}", 'green')
+
+    return directories, files  # Return directories and files for correct indexing in handle_directory_choice

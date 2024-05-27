@@ -2,7 +2,7 @@ import os
 from github import Github
 from dotenv import load_dotenv
 from termcolor import cprint
-from core.summarize import summarize_readme_and_structure
+from core.summarize import summarize_directory
 from utils.log_utils import log_conversation
 from utils.menu import navigation_menu
 import openai
@@ -35,10 +35,12 @@ def main():
         # Fetch branches
         branches = [branch.name for branch in repo.get_branches()]
         
-        # Summarize README file and repository structure
-        readme = repo.get_readme()
-        readme_text = readme.decoded_content.decode()
-        summary, _, tokens_used = summarize_readme_and_structure(readme_text, repo, branches)
+        # Fetch and cache the root directory contents
+        root_contents = repo.get_contents("", ref=repo.default_branch)
+        
+        # Summarize initial directory (root)
+        summary_cache = {}
+        summary, _, tokens_used = summarize_directory(repo, "", root_contents, [], summary_cache)
         cprint("Repository Purpose Summary:\n", 'yellow')
         cprint(summary, 'yellow')
         
@@ -46,7 +48,7 @@ def main():
         log_conversation("Initial repository analysis", summary, conversation_log)
         
         # Start interactive navigation menu
-        navigation_menu(repo, conversation_log)
+        navigation_menu(repo, conversation_log, root_contents)
     
     except Exception as e:
         cprint(f"Error in main: {e}", 'red')
