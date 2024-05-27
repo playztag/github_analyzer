@@ -30,7 +30,7 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
                 summary, previous_interactions, tokens_used = summarize_directory(repo, new_path, new_contents, previous_interactions, summary_cache)
                 cprint(summary, 'yellow')
                 log_conversation(f"Directory: {new_path}", summary, conversation_log)
-                return new_path, previous_interactions
+                return new_path, previous_interactions, True  # Return True to indicate a valid navigation
             elif dir_choice < len(directories) + len(files):
                 file_choice = dir_choice - len(directories)
                 file_path = files[file_choice].path
@@ -38,28 +38,29 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
                 summary, previous_interactions, tokens_used = summarize_file(repo, file_path, file_content, previous_interactions, summary_cache)
                 cprint(summary, 'yellow')
                 log_conversation(f"File: {file_path}", summary, conversation_log)
-                return file_path, previous_interactions
+                return file_path, previous_interactions, True  # Return True to indicate a valid navigation
             else:
                 cprint("Invalid choice. Please select a valid item.", 'red')
-                return directory_path, previous_interactions
+                return directory_path, previous_interactions, False
         elif choice.lower() == 'a':
             mark_item(directory_path)
             cprint(f"Marked '{directory_path}' for capture.", 'yellow')
+            return directory_path, previous_interactions, False
         elif choice.lower() == 'b':
             capture_selected_directories(selected_directories)
-            return directory_path, previous_interactions
+            return directory_path, previous_interactions, False
         elif choice.lower() == 'c':
-            return None, previous_interactions
+            return None, previous_interactions, False
         elif choice.lower() == 'd':
-            return directory_path, process_user_prompt(previous_interactions, conversation_log)
+            return directory_path, process_user_prompt(previous_interactions, conversation_log), False
         elif choice.lower() == 'e':
             summary, previous_interactions, tokens_used = summarize_directory(repo, directory_path, contents, previous_interactions, summary_cache)
             cprint(summary, 'yellow')
             log_conversation(f"Directory: {directory_path}", summary, conversation_log)
-            return directory_path, previous_interactions
+            return directory_path, previous_interactions, False
         elif choice.lower() == 'f':
             new_branch = switch_branch(repo)
-            return new_branch if new_branch else branch_name, previous_interactions
+            return new_branch if new_branch else branch_name, previous_interactions, False
         elif choice.lower() == 'u':
             new_path = navigate_up(directory_path)
             if new_path in cached_contents:
@@ -68,13 +69,14 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
                 contents = repo.get_contents(new_path, ref=branch_name)
                 cached_contents[new_path] = contents
             cprint(f"Navigated up to {new_path}", 'yellow')
-            return new_path, previous_interactions
+            return new_path, previous_interactions, True  # Return True to indicate a valid navigation
         else:
             cprint("Invalid choice. Please enter a valid input.", 'red')
+            return directory_path, previous_interactions, False
     except Exception as e:
         cprint(f"Error in execute_choice: {e}", 'red')
         traceback.print_exc()
-    return directory_path, previous_interactions
+        return directory_path, previous_interactions, False
 
 def navigation_menu(repo, conversation_log, root_contents):
     """Main function to navigate the GitHub repository."""
@@ -91,16 +93,32 @@ def navigation_menu(repo, conversation_log, root_contents):
 
     while True:
         try:
-            contents = cached_contents.get(directory_path, [])
-            cprint(f"\nCurrent Branch: {branch_name}", 'yellow')
-            cprint(f"Current Directory: {directory_path or 'default'}\n", 'yellow')
-            
-            display_marked_items()
-            directories, files = display_contents(contents, repo, branch_name)
+            if directory_path in cached_contents:
+                contents = cached_contents[directory_path]
+            else:
+                contents = repo.get_contents(directory_path, ref=branch_name)
+                cached_contents[directory_path] = contents
+
+            if contents:
+                cprint(f"\nCurrent Branch: {branch_name}", 'yellow')
+                cprint(f"Current Directory: {directory_path or 'default'}\n", 'yellow')
+                display_marked_items()
+                directories, files = display_contents(contents, repo, branch_name)
+
             display_navigation_menu()
             choice = input("Enter your choice (number to navigate, letter for menu): ")
+
+            if choice.lower() == 'c':
+                cprint("Exiting...", 'cyan')
+                break
             
-            directory_path, previous_interactions = execute_choice(choice, repo, branch_name, directory_path, selected_directories, conversation_log, previous_interactions, cached_contents, summary_cache)
+            directory_path, previous_interactions, valid_navigation = execute_choice(
+                choice, repo, branch_name, directory_path, selected_directories, conversation_log, previous_interactions, cached_contents, summary_cache
+            )
+            
+            # Only display contents again if the navigation was valid
+            if not valid_navigation:
+                continue
             
         except Exception as e:
             cprint(f"Error in navigation_menu: {e}", 'red')

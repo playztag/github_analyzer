@@ -26,6 +26,7 @@ def summarize_directory(repo, directory_path, contents, previous_interactions, s
     {structure_summary}
     
     Please provide a one-paragraph summary of the important aspects of this directory and the files within it.
+    Ignore any licensing information or comments and focus on the code and its functionalities.
     """
 
     try:
@@ -49,6 +50,7 @@ def summarize_file(repo, file_path, file_content, previous_interactions, summary
     {file_content[:1000]}  # Limiting to the first 1000 characters to fit within token limits
     
     Please provide a one-paragraph summary of the important aspects of this file, its functionalities, and any notable code structures.
+    Ignore any licensing information or comments and focus on the code and its functionalities.
     """
     
     try:
