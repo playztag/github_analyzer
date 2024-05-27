@@ -1,3 +1,4 @@
+# utils/utils.py
 from termcolor import cprint
 from core.github_utils import estimate_code_size
 from utils.file_utils import analyze_file_choice
@@ -6,6 +7,7 @@ from utils.interaction_utils import process_user_prompt
 import traceback
 
 marked_items = {}
+bookmarked_items = []
 
 def mark_item(path):
     if path in marked_items:
@@ -17,6 +19,21 @@ def display_marked_items():
     for path, marked in marked_items.items():
         mark = '✔' if marked else '☐'
         cprint(f"{mark} {path}", 'yellow')
+
+def bookmark_item(path):
+    if path not in bookmarked_items:
+        bookmarked_items.append(path)
+        cprint(f"Bookmarked: {path}", 'yellow')
+    else:
+        cprint(f"Already bookmarked: {path}", 'yellow')
+
+def display_bookmarked_items():
+    if bookmarked_items:
+        cprint("Bookmarked Items:", 'yellow')
+        for item in bookmarked_items:
+            cprint(f"- {item}", 'yellow')
+    else:
+        cprint("No bookmarked items.", 'yellow')
 
 def handle_directory_choice(contents, dir_choice, previous_interactions, conversation_log, response_cache, repo, branch_name):
     """Handle user's choice to navigate into a directory or analyze a file."""
@@ -42,7 +59,7 @@ def capture_selected_directories(selected_directories):
 
 def display_contents(contents, repo, branch_name):
     if not isinstance(contents, list):
-        contents = [contents]  # Ensure contents is a list
+        contents = [contents]
 
     directories = [content for content in contents if content.type == "dir"]
     files = [content for content in contents if content.type == "file"]
@@ -56,4 +73,4 @@ def display_contents(contents, repo, branch_name):
         lines_of_code = estimate_code_size(repo, content.path, branch_name)
         cprint(f"{i + 1 + len(directories)}. {content.path} - Lines of Code: {lines_of_code}", 'green')
 
-    return directories, files  # Return directories and files for correct indexing in handle_directory_choice
+    return directories, files
