@@ -6,7 +6,7 @@ class ContextManager:
             "analyzed_files": [],
             "analyzed_directories": [],
             "file_contents": {},
-            "interaction_history": []  # To store interaction history
+            "interaction_history": []
         }
 
     def add_analyzed_directory(self, directory_path):
@@ -36,4 +36,5 @@ class ContextManager:
     def get_context(self):
         return self.global_context
 
+# Instantiate context manager
 context_manager = ContextManager()

@@ -32,6 +32,10 @@ def analyze_directory(repo, branch_name, directory_path, previous_interactions):
         """
         
         system_prompt = "You are a helpful assistant with expertise in software engineering and GitHub repository analysis."
+        
+        print("DEBUG: Directory analysis prompt (first 500 characters):")
+        print(prompt[:500])
+        
         return generate_ai_response(system_prompt, prompt, previous_interactions)
     except Exception as e:
         print(f"Error in analyze_directory: {e}")
@@ -57,6 +61,10 @@ def analyze_file(repo, branch_name, file_path, previous_interactions):
         """
         
         system_prompt = "You are a helpful assistant with expertise in software engineering and GitHub repository analysis."
+        
+        print("DEBUG: File analysis prompt (first 500 characters):")
+        print(prompt[:500])
+        
         return generate_ai_response(system_prompt, prompt, previous_interactions)
     except Exception as e:
         print(f"Error in analyze_file: {e}")

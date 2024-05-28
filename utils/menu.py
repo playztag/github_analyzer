@@ -2,11 +2,11 @@ from termcolor import cprint
 from utils.navigation_utils import display_navigation_menu, switch_branch, navigate_up
 from utils.cache_utils import check_cache, response_cache
 from utils.directory_utils import analyze_directory_choice
-from ai_interaction import process_user_prompt
 from utils.file_utils import analyze_file_choice
 from utils.utils import mark_item, capture_selected_directories, display_contents, bookmark_item, display_marked_items, display_bookmarked_items
 from core.github_utils import estimate_code_size
 from core.summarize import summarize_directory, summarize_file
+from ai_interaction import process_user_prompt
 from logger import log_conversation
 import traceback
 

@@ -28,6 +28,9 @@ def summarize_directory(repo, directory_path, contents, previous_interactions, s
     Please provide a one-paragraph summary of the important aspects of this directory and the files within it.
     Ignore any licensing information or comments and focus on the code and its functionalities.
     """
+    
+    print("DEBUG: Directory summary prompt (first 500 characters):")
+    print(user_prompt[:500])
 
     try:
         summary, _, tokens_used = generate_ai_response(SYSTEM_PROMPT, user_prompt, previous_interactions)
@@ -52,6 +55,9 @@ def summarize_file(repo, file_path, file_content, previous_interactions, summary
     Please provide a one-paragraph summary of the important aspects of this file, its functionalities, and any notable code structures.
     Ignore any licensing information or comments and focus on the code and its functionalities.
     """
+    
+    print("DEBUG: File summary prompt (first 500 characters):")
+    print(prompt[:500])
     
     try:
         summary, _, tokens_used = generate_ai_response(SYSTEM_PROMPT, prompt, previous_interactions)

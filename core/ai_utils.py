@@ -22,8 +22,8 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
     # Calculate the token count for all messages
     total_tokens = sum(count_tokens(message["content"]) for message in messages)
     
-    # Print the first 300 characters of the prompt for debugging
-    print("Prompt sent to LLM (first 500 characters):")
+    # Print the first 500 characters of the prompt for debugging
+    print("DEBUG: Prompt sent to LLM (first 500 characters):")
     print(messages[-1]['content'][:500])
 
     try:
@@ -42,10 +42,12 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
                 log.write(f"{message['role']}: {message['content']}\n")
             log.write("\n")
 
+        print("DEBUG: AI response content (first 500 characters):")
+        print(content[:500])
+        
         return content, messages, total_tokens
     
     except Exception as e:
         spinner.fail(f"Error in generate_ai_response: {e}")
         traceback.print_exc()
         return f"Error in generate_ai_response: {e}", messages, total_tokens
-
