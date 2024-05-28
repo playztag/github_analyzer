@@ -1,0 +1,6 @@
+openai==0.27.0
+halo==0.0.31
+tiktoken==0.4.0
+PyGithub==1.55
+python-dotenv==0.21.0
+termcolor==2.2.0

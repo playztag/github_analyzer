@@ -1,4 +1,5 @@
 from core.ai_utils import generate_ai_response
+from context_manager import context_manager
 import traceback
 
 def estimate_code_size(repo, path, ref):
@@ -32,6 +33,10 @@ def analyze_directory(repo, branch_name, directory_path, previous_interactions):
         """
         
         system_prompt = "You are a helpful assistant with expertise in software engineering and GitHub repository analysis."
+        
+        print("DEBUG: Directory analysis prompt (first 500 characters):")
+        print(prompt[:500])
+        
         return generate_ai_response(system_prompt, prompt, previous_interactions)
     except Exception as e:
         print(f"Error in analyze_directory: {e}")
@@ -43,19 +48,24 @@ def analyze_file(repo, branch_name, file_path, previous_interactions):
         file_contents = repo.get_contents(file_path, ref=branch_name).decoded_content.decode('utf-8')
         lines_of_code = file_contents.count('\n') + 1
         
-        # Truncate the file content if it is too long
-        max_length = 4000  # Adjust this value based on the desired prompt length and model token limits
-        truncated_file_contents = file_contents[:max_length]
+        # Add file content to context manager
+        context_manager.add_file_content(file_path, file_contents)
+        context_manager.add_interaction(f"Analyzed File: {file_path}\nContent: {file_contents[:1000]}")
         
+        # Ensure the file content is fully included in the prompt
         prompt = f"""
         You are analyzing a GitHub repository file. The current file is '{file_path}' on branch '{branch_name}'.
         The file contains the following contents:
-        {truncated_file_contents}
+        {file_contents}
         
         Please provide a one-paragraph summary of the important aspects of this file, its functionalities, and any notable code structures. 
         """
         
         system_prompt = "You are a helpful assistant with expertise in software engineering and GitHub repository analysis."
+        
+        print("DEBUG: File analysis prompt (first 500 characters):")
+        print(prompt[:500])
+        
         return generate_ai_response(system_prompt, prompt, previous_interactions)
     except Exception as e:
         print(f"Error in analyze_file: {e}")

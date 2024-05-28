@@ -14,6 +14,7 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
     spinner = Halo(text='Waiting for API response...', spinner='dots')
     spinner.start()
     
+    # Include previous interactions and context in the prompt
     messages = [{"role": "system", "content": system_prompt}]
     messages += previous_interactions
     messages.append({"role": "user", "content": user_prompt})
@@ -21,9 +22,9 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
     # Calculate the token count for all messages
     total_tokens = sum(count_tokens(message["content"]) for message in messages)
     
-    # Print the first 100 characters of the prompt for debugging
-    print("Prompt sent to LLM (first 300 characters):")
-    print(messages[-1]['content'][:300])
+    # Print the first 500 characters of the prompt for debugging
+    print("DEBUG: Prompt sent to LLM (first 500 characters):")
+    print(messages[-1]['content'][:500])
 
     try:
         response = protected_openai_chat_completion(messages)
@@ -41,6 +42,9 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
                 log.write(f"{message['role']}: {message['content']}\n")
             log.write("\n")
 
+        print("DEBUG: AI response content (first 500 characters):")
+        print(content[:500])
+        
         return content, messages, total_tokens
     
     except Exception as e:
