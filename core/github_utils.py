@@ -45,7 +45,8 @@ def analyze_file(repo, branch_name, file_path, previous_interactions):
         
         # Add file content to context manager
         context_manager.add_file_content(file_path, file_contents)
-
+        context_manager.add_interaction(f"Analyzed File: {file_path}\nContent: {file_contents[:1000]}")
+        
         # Ensure the file content is fully included in the prompt
         prompt = f"""
         You are analyzing a GitHub repository file. The current file is '{file_path}' on branch '{branch_name}'.
