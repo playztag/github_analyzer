@@ -9,6 +9,8 @@ from core.summarize import summarize_directory, summarize_file
 from ai_interaction import process_user_prompt
 from logger import log_conversation
 import traceback
+from context_manager import context_manager
+
 
 global_context = {
     "summaries": {},
@@ -18,7 +20,7 @@ global_context = {
 def execute_choice(choice, repo, branch_name, directory_path, selected_directories, conversation_log, previous_interactions, cached_contents, summary_cache):
     print(f"DEBUG: execute_choice called with choice: {choice}")
     global global_context  # Use the global context
-    
+
     try:
         if directory_path in cached_contents:
             contents = cached_contents[directory_path]
@@ -49,6 +51,7 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
                 cprint(summary, 'yellow')
                 log_conversation(f"Directory: {new_path}", summary, conversation_log)
                 global_context["summaries"][new_path] = summary  # Store summary in global context
+                context_manager.add_summary(new_path, summary)
                 return new_path, previous_interactions, True
             elif dir_choice < len(directories) + len(files):
                 file_choice = dir_choice - len(directories)
@@ -59,6 +62,7 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
                 cprint(summary, 'yellow')
                 log_conversation(f"File: {file_path}", summary, conversation_log)
                 global_context["summaries"][file_path] = summary  # Store summary in global context
+                context_manager.add_summary(file_path, summary)
                 return file_path, previous_interactions, True
             else:
                 cprint("Invalid choice. Please select a valid item.", 'red')
@@ -84,6 +88,7 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
             user_prompt = input("Enter your prompt: ")
             context = f"Current directory: {directory_path}\nDirectories: {directories}\nFiles: {files}\n"
             global_context["previous_prompts"].append(user_prompt)  # Store user prompt in global context
+            context_manager.add_previous_prompt(user_prompt)
             return directory_path, process_user_prompt(previous_interactions, conversation_log, context), True
         elif choice.lower() == 'e':
             print(f"DEBUG: Handling choice 'e'")
@@ -92,6 +97,7 @@ def execute_choice(choice, repo, branch_name, directory_path, selected_directori
             cprint(summary, 'yellow')
             log_conversation(f"Directory: {directory_path}", summary, conversation_log)
             global_context["summaries"][directory_path] = summary  # Store summary in global context
+            context_manager.add_summary(directory_path, summary)
             return directory_path, previous_interactions, True
         elif choice.lower() == 'f':
             print(f"DEBUG: Handling choice 'f'")
