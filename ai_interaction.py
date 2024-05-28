@@ -7,7 +7,14 @@ import traceback
 def generate_full_prompt(context, user_prompt):
     system_prompt = "You are a helpful assistant with expertise in software engineering and GitHub repository analysis."
     previous_summary = context_manager.summarize_previous_interactions()
-    return f"{context}\n\n{previous_summary}\n\nUser Prompt: {user_prompt}", system_prompt
+    
+    # Include file contents in the context
+    file_contents_summary = "Summary of analyzed file contents:\n"
+    for file_path, content in context_manager.global_context["file_contents"].items():
+        file_contents_summary += f"File: {file_path}\nContent: {content[:1000]}\n\n"  # Limiting to first 1000 characters
+    
+    return f"{context}\n\n{previous_summary}\n\n{file_contents_summary}\n\nUser Prompt: {user_prompt}", system_prompt
+
 
 def process_user_prompt(previous_interactions, conversation_log, context):
     try:
@@ -21,3 +28,4 @@ def process_user_prompt(previous_interactions, conversation_log, context):
         cprint(f"Error in process_user_prompt: {e}", 'red')
         traceback.print_exc()
         return previous_interactions
+

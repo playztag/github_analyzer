@@ -4,7 +4,8 @@ class ContextManager:
             "summaries": {},
             "previous_prompts": [],
             "analyzed_files": [],
-            "analyzed_directories": []
+            "analyzed_directories": [],
+            "file_contents": {}  # New dictionary to store file contents
         }
 
     def add_analyzed_directory(self, directory_path):
@@ -12,6 +13,9 @@ class ContextManager:
 
     def add_analyzed_file(self, file_path):
         self.global_context["analyzed_files"].append(file_path)
+
+    def add_file_content(self, file_path, content):
+        self.global_context["file_contents"][file_path] = content  # Store file content
 
     def add_summary(self, key, summary):
         self.global_context["summaries"][key] = summary

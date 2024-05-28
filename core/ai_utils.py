@@ -22,9 +22,9 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
     # Calculate the token count for all messages
     total_tokens = sum(count_tokens(message["content"]) for message in messages)
     
-    # Print the first 100 characters of the prompt for debugging
-    print("Prompt sent to LLM (first 300 characters):")
-    print(messages[-1]['content'][:300])
+    # Print the first 300 characters of the prompt for debugging
+    print("Prompt sent to LLM (first 500 characters):")
+    print(messages[-1]['content'][:500])
 
     try:
         response = protected_openai_chat_completion(messages)
@@ -48,3 +48,4 @@ def generate_ai_response(system_prompt, user_prompt, previous_interactions=[], l
         spinner.fail(f"Error in generate_ai_response: {e}")
         traceback.print_exc()
         return f"Error in generate_ai_response: {e}", messages, total_tokens
+

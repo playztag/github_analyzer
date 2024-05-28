@@ -43,14 +43,14 @@ def analyze_file(repo, branch_name, file_path, previous_interactions):
         file_contents = repo.get_contents(file_path, ref=branch_name).decoded_content.decode('utf-8')
         lines_of_code = file_contents.count('\n') + 1
         
-        # Truncate the file content if it is too long
-        max_length = 4000  # Adjust this value based on the desired prompt length and model token limits
-        truncated_file_contents = file_contents[:max_length]
-        
+        # Add file content to context manager
+        context_manager.add_file_content(file_path, file_contents)
+
+        # Ensure the file content is fully included in the prompt
         prompt = f"""
         You are analyzing a GitHub repository file. The current file is '{file_path}' on branch '{branch_name}'.
         The file contains the following contents:
-        {truncated_file_contents}
+        {file_contents}
         
         Please provide a one-paragraph summary of the important aspects of this file, its functionalities, and any notable code structures. 
         """
