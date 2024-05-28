@@ -1,4 +1,5 @@
 from core.ai_utils import generate_ai_response
+from context_manager import context_manager
 import traceback
 
 def estimate_code_size(repo, path, ref):

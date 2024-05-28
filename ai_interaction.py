@@ -21,7 +21,6 @@ def generate_full_prompt(context, user_prompt):
     print(full_prompt[:500])
     return full_prompt, system_prompt
 
-
 def process_user_prompt(previous_interactions, conversation_log, context):
     try:
         user_prompt = input("Enter your prompt: ")
@@ -42,4 +41,3 @@ def process_user_prompt(previous_interactions, conversation_log, context):
         print(f"Error in process_user_prompt: {e}")  # Replace cprint with print for debugging
         traceback.print_exc()
         return previous_interactions
-

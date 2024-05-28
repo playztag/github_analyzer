@@ -1,5 +1,6 @@
 from core.ai_utils import generate_ai_response
 from termcolor import cprint
+from context_manager import context_manager
 from prompts import SYSTEM_PROMPT
 import traceback
 
@@ -46,7 +47,9 @@ def summarize_file(repo, file_path, file_content, previous_interactions, summary
     
     if file_path in summary_cache:
         return summary_cache[file_path], previous_interactions, 0
-    
+
+    context_manager.add_file_content(file_path, file_content)
+
     prompt = f"""
     You are analyzing a GitHub repository file. The current file is '{file_path}'.
     The file contains the following contents:
